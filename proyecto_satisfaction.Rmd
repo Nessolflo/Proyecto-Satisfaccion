@@ -2,17 +2,86 @@
 title: "R Notebook"
 output: html_notebook
 ---
-
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
+#Librerias
 ```{r}
-plot(cars)
+library(dplyr)
+library(ggplot2)
+library(MASS)
+library(caret)
+```
+#Leemos el dataset
+```{r}
+data<-read.csv("dataset.csv")
+glimpse(data)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+#Arreglamos datos
+```{r}
+#Arreglamos la columna satisfecho 
+data <- data %>%
+  mutate(satisfaction_v2 = ifelse(satisfaction_v2 == 'satisfied', 1,0))
+data$satisfaction_v2 <- factor(data$satisfaction_v2)
+#Arreglamos la columna genero
+data <- data %>%
+  mutate(Gender = ifelse(Gender == 'Male', 1,0))
+data$Gender <- factor(data$Gender)
+```
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+#Verificamos data
+```{r}
+glimpse(data)
+```
+
+#Partimos la data
+```{r}
+set.seed(500)
+tempdata <- createDataPartition(data$satisfaction_v2,
+                                p = 0.6,
+                                list = F,
+                                times = 1)
+trData <- data[tempdata,]
+tsData <- data[-tempdata, ]
+```
+
+#Nombre de columnas
+```{r}
+colnames(trData)
+```
+
+```{r}
+modelo.one <- trData %>%
+  glm(formula = satisfaction_v2 ~ Gender + Age + Flight.Distance,
+      family = "binomial")
+summary(modelo.one)
+
+```
+
+#Preparamos La prediccion
+
+```{r}
+resultado <- tsData[,c("satisfaction_v2", "Gender", "Age", "Flight.Distance")]
+prediccion <- predict(object = modelo.one,
+                      newdata = resultado,
+                      type = "response")
+predicciones <- ifelse(prediccion >= 0.5,1,0)
+resultado <- resultado %>%
+  mutate(prob=prediccion) %>%
+  mutate(Prediccion = predicciones)
+resultado
+```
+
+#Es buen modelo o no 
+```{r}
+confusionMatrix(
+  factor(resultado$Prediccion),
+  factor(resultado$satisfaction_v2),
+  positive = "1"
+)
+```
+
+
+
+
+
+
