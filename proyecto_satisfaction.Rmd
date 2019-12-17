@@ -15,6 +15,63 @@ data<-read.csv("dataset.csv")
 glimpse(data)
 ```
 
+#Analizamos las variables
+#cantidad de datos 
+```{r}
+nrow(data)
+```
+
+#Satisfaccion
+```{r}
+summary(data$satisfaction_v2)
+```
+
+```{r}
+barplot(table(data$satisfaction_v2),
+        main= "Pasajeros",
+        xlab= "Satisfechos",
+        ylab= "Cantidad",
+        col = rainbow(2))
+```
+
+#Sexo
+```{r}
+table(data$Gender)
+```
+
+```{r}
+barplot(table(data$Gender),
+        main= "Pasajeros",
+        xlab= "Genero",
+        ylab= "Cantidad",
+        col = rainbow(2),
+        ylim = c(0,70000))
+```
+
+#Edades
+
+```{r}
+summary(data$Age)
+```
+
+```{r}
+plot(density(data$Age),
+     type="l",
+     col="blue",
+     lwd= 2)
+```
+#Tendencia central
+```{r}
+paste("Media:", mean(data$Age))
+paste("Mediana:", median(data$Age))
+```
+
+
+#Dataset
+```{r}
+summary(data)
+```
+
 #Arreglamos datos
 ```{r}
 #Arreglamos la columna satisfecho 
@@ -32,6 +89,7 @@ data$Gender <- factor(data$Gender)
 ```{r}
 glimpse(data)
 ```
+
 
 #Partimos la data
 ```{r}
@@ -80,7 +138,7 @@ confusionMatrix(
 )
 ```
 
-
+#Revisando variables
 
 
 
