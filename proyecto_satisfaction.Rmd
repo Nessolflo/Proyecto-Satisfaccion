@@ -34,7 +34,7 @@ barplot(table(data$satisfaction_v2),
         col = rainbow(2))
 ```
 
-#Sexo
+#Genero
 ```{r}
 table(data$Gender)
 ```
@@ -60,10 +60,38 @@ plot(density(data$Age),
      col="blue",
      lwd= 2)
 ```
+
+
 #Tendencia central
 ```{r}
 paste("Media:", mean(data$Age))
 paste("Mediana:", median(data$Age))
+```
+
+#Checking Service 
+
+```{r}
+summary(data$Checkin.service)
+```
+```{r}
+barplot(table(data$Checkin.service),
+        main= "Pasajeros",
+        xlab= "Checkin.service",
+        ylab= "Cantidad",
+        col = rainbow(5),
+        ylim = c(0,40000))
+```
+#Distancia 
+
+```{r}
+summary(data$Flight.Distance)
+```
+
+```{r}
+plot(density(data$Flight.Distance),
+     type="l",
+     col="blue",
+     lwd= 2)
 ```
 
 
