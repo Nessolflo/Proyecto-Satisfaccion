@@ -138,8 +138,32 @@ confusionMatrix(
 )
 ```
 
-#Revisando variables
+```{r}
+modelo.two <- trData %>%
+  glm(formula = satisfaction_v2 ~ Checkin.service,
+      family = "binomial")
+summary(modelo.two)
+```
 
+
+```{r}
+resultado2 <- tsData[,c("satisfaction_v2", "Checkin.service")]
+prediccion2 <- predict(object = modelo.two,
+                      newdata = resultado2,
+                      type = "response")
+predicciones2 <- ifelse(prediccion2 >= 0.5,1,0)
+resultado2 <- resultado2 %>%
+  mutate(prob=prediccion2) %>%
+  mutate(Prediccion = predicciones2)
+resultado2
+```
+```{r}
+confusionMatrix(
+  factor(resultado2$Prediccion),
+  factor(resultado2$satisfaction_v2),
+  positive = "1"
+)
+```
 
 
 
